@@ -8,6 +8,7 @@
 
 // Cada texto é uma linha do labirinto, vista de cima.
 // A coluna vira a coordenada x do mundo e a linha vira a coordenada z.
+// S = jogador, G = gato, X = perseguidor, P = porta, F = sala da prova.
 static const char *mapa[MAPA_LINHAS] = {
     "####################",
     "#S...#.....#.......#",
@@ -20,9 +21,9 @@ static const char *mapa[MAPA_LINHAS] = {
     "####.#.#...#.###.#.#",
     "#....#.#####.#...#.#",
     "#.####.......#.###.#",
-    "#.#....#####.#.....#",
+    "#.#.G..#####.#.....#",
     "#.#.####...#.#####.#",
-    "#...#....#.#.......#",
+    "#...#....#.#...X...#",
     "#.###.####.######P##",
     "#.....#....#FFFFFFF#",
     "#####.#.####FFFFFFF#",

@@ -39,6 +39,8 @@ Windows com MSYS2 e freeGLUT: troque `-lglut32` por `-lfreeglut`.
 ## Controles
 
 - `W` `A` `S` `D` ou setas: andar e girar
+- Agarrado pelo perseguidor: apertar as teclas de andar várias vezes, rápido, para se soltar
 - Mouse: olhar
+- `E`: fazer carinho no gato (perto dele)
 - `M`: soltar ou prender o mouse
 - `ESC`: sair

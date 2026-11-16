@@ -14,6 +14,10 @@
 #define CEL_INICIO 'S'   // onde o jogador nasce
 #define CEL_PORTA  'P'   // porta da sala da prova (trancada por enquanto)
 #define CEL_SALA   'F'   // chão da sala da prova
+// Onde os NPCs nascem. São chão: celulaSolida() não os trata como parede.
+// ('P' já é a porta, por isso o perseguidor usa 'X'.)
+#define CEL_GATO        'G'
+#define CEL_PERSEGUIDOR 'X'
 
 // Conteúdo da célula (linha, coluna). Fora do mapa conta como parede.
 char celula(int linha, int coluna);
