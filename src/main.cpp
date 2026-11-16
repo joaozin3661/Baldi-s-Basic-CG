@@ -7,6 +7,7 @@
 #include "mapa.h"
 #include "jogador.h"
 #include "texturas.h"
+#include "jogo.h"
 #include <cctype>
 #include <cstdlib>
 
@@ -87,6 +88,12 @@ static void atualiza() {
     tempoAnterior = agora;
     if (dt > 0.05f) dt = 0.05f;   // evita saltos grandes se o jogo travar por um instante
 
+    atualizaJogo(dt);
+    if (jogo.estado != JOGO_JOGANDO) {   // nas telas de menu, prova e fim o jogador não anda
+        glutPostRedisplay();
+        return;
+    }
+
     float frente = 0.0f, lado = 0.0f;
     if (teclas['w'] || especiais[GLUT_KEY_UP])   frente += 1.0f;
     if (teclas['s'] || especiais[GLUT_KEY_DOWN]) frente -= 1.0f;
@@ -158,6 +165,8 @@ int main(int argc, char **argv) {
     iniciaTexturas();
     iniciaMapa();
     iniciaJogador();
+    iniciaJogo();
+    comecaPartida();   // enquanto não há tela de início, a partida começa direto
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);

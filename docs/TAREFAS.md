@@ -23,7 +23,7 @@ Cada um trabalha em arquivos próprios, para evitar conflito no Git. O `main.cpp
 | Quem | Área | Arquivos |
 |---|---|---|
 | João | Jogabilidade e IA: cadernos, perseguidor, porta, boss fight | `cadernos`, `perseguidor`, `chefe`, `mapa` |
-| Dupla (nome a preencher) | Interface e acabamento: HUD, telas, áudio, modelos 3D, minimapa | `hud`, `telas`, `audio`, `modelos` |
+| Raimundo | Interface e acabamento: HUD, telas, áudio, modelos 3D, minimapa | `hud`, `telas`, `audio`, `modelos` |
 | Os dois | Estado compartilhado do jogo, relatório, apresentação | `jogo.h`, `relatorio/` |
 
 O `jogo.h` guarda o que os dois lados precisam: cadernos coletados e total, tempo restante,
@@ -31,7 +31,9 @@ estado do jogo (menu, jogando, prova, vitória, derrota) e a posição do perseg
 
 ## Fase 2 — Gameplay
 
-- [ ] (Os dois) `jogo.h` com o estado compartilhado
+- [x] (Os dois) `jogo.h` com o estado compartilhado
+  Feito em 16/11/2026 (Raimundo). Arquivos: `src/jogo.h`, `src/jogo.cpp`. O `main.cpp` chama `iniciaJogo()`, `comecaPartida()` e `atualizaJogo(dt)`,
+  e só move o jogador em `JOGO_JOGANDO`. Enquanto não há telas, a partida começa direto. Compila sem avisos com `-Wall`.
 - [ ] (João) Cadernos: posicionamento no mapa, desenho e coleta (colisão por esferas)
 - [ ] (João) Perseguidor: máquina de estados (patrulha e perseguição) e busca de caminho na grade
 - [ ] (João) Velocidade do perseguidor aumenta por caderno
