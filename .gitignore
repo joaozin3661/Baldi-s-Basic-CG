@@ -1,0 +1,31 @@
+# Binários e objetos
+*.o
+*.obj.o
+*.exe
+*.out
+*.a
+*.lib
+*.dll
+*.so
+/labirinto
+/build/
+/bin/
+/obj/
+
+# IDEs
+.vscode/
+.vs/
+*.layout
+*.depend
+*.fpj.user
+*.suo
+*.user
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Material da disciplina (não publicar)
+*.pdf
+!relatorio/*.pdf
