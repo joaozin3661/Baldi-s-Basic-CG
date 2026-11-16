@@ -27,6 +27,18 @@ Linux:
 
     g++ -o labirinto src/*.cpp -lGL -lGLU -lglut
 
-Windows (MinGW / Falcon C++), parâmetros do linker:
+Windows com o g++ do Falcon C++ (TDM mingw32, pacote GLUT instalado), no PowerShell dentro da pasta do projeto:
 
-    -lfreeglut -lglu32 -lopengl32 -lwinmm -lgdi32
+    g++ -o labirinto.exe src/*.cpp -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32
+    .\labirinto.exe
+
+Também funciona pelo próprio Falcon C++: crie um projeto Multimedia, adicione os arquivos de `src/` e aperte F9.
+
+Windows com MSYS2 e freeGLUT: troque `-lglut32` por `-lfreeglut`.
+
+## Controles
+
+- `W` `A` `S` `D` ou setas: andar e girar
+- Mouse: olhar
+- `M`: soltar ou prender o mouse
+- `ESC`: sair
