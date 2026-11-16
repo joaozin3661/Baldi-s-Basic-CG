@@ -20,3 +20,12 @@ Registre aqui cada decisão fechada, com data. A mais recente fica no topo.
 - Desenho do labirinto.
 - Papel do indicador de "nota": com todos os cadernos obrigatórios, ele sempre chega ao máximo.
 - Bibliotecas de áudio, de carregamento de imagem e de modelos 3D.
+
+## Propostas de NPC (Raimundo, 16/11/2026, a decidir com o João)
+
+- **Gato da faculdade:** anda pelos corredores e pode ser acariciado ao chegar perto e apertar uma tecla.
+  Por enquanto só carinho; fica como gancho para uma mecânica futura (por exemplo, o gato distrair o perseguidor).
+- **Aluno do bar:** segundo perseguidor, um colega que quer te levar para o bar. Se te alcança, te agarra e começa a te
+  arrastar na direção do bar; para se soltar, o jogador tem que se mexer várias vezes (apertar as teclas de andar
+  repetidamente). Contaria como mecânica nova em relação ao Baldi's Basics.
+- Os dois NPCs entram na área de IA. Como ela é do João, a divisão precisa ser ajustada se o Raimundo for implementá-los.
