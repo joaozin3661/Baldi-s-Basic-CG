@@ -1,13 +1,18 @@
 // Labirinto da Faculdade - Trabalho Final de Computação Gráfica (UFPI)
 // Fase 1: labirinto 3D, câmera FPS, colisão, iluminação, texturas e visibilidade.
 //
-// Controles: W A S D ou setas = andar/girar | mouse = olhar | M = soltar/prender o mouse | ESC = sair
+// Controles: W A S D ou setas = andar/girar (agarrado: apertar várias vezes para se soltar)
+//            mouse = olhar | E = acariciar o gato
+//            M = soltar/prender o mouse | ESC = sair
 
 #include "gl_includes.h"
 #include "mapa.h"
 #include "jogador.h"
 #include "texturas.h"
 #include "jogo.h"
+#include "perseguidor.h"
+#include "gato.h"
+#include "telas.h"
 #include <cctype>
 #include <cstdlib>
 
@@ -64,6 +69,9 @@ static void display() {
     glLightfv(GL_LIGHT0, GL_POSITION, posicaoLuz);
 
     desenhaMapa();
+    desenhaPerseguidor();
+    desenhaGato();
+    desenhaTelas(larguraJanela, alturaJanela);   // menu e telas de fim, por cima da cena
 
     glutSwapBuffers();
 }
@@ -94,15 +102,23 @@ static void atualiza() {
         return;
     }
 
-    float frente = 0.0f, lado = 0.0f;
-    if (teclas['w'] || especiais[GLUT_KEY_UP])   frente += 1.0f;
-    if (teclas['s'] || especiais[GLUT_KEY_DOWN]) frente -= 1.0f;
-    if (teclas['d']) lado += 1.0f;
-    if (teclas['a']) lado -= 1.0f;
-    moveJogador(frente, lado, dt);
+    // Nos braços do perseguidor o aluno não anda: é ele quem leva o aluno
+    // (atualizaPerseguidor move os dois); as teclas de andar viram "se debater".
+    if (!perseguidorAgarrouJogador()) {
+        float frente = 0.0f, lado = 0.0f;
+        if (teclas['w'] || especiais[GLUT_KEY_UP])   frente += 1.0f;
+        if (teclas['s'] || especiais[GLUT_KEY_DOWN]) frente -= 1.0f;
+        if (teclas['d']) lado += 1.0f;
+        if (teclas['a']) lado -= 1.0f;
+        moveJogador(frente, lado, dt);
+    }
 
     if (especiais[GLUT_KEY_RIGHT]) giraJogador(JOGADOR_GIRO * dt, 0.0f);
     if (especiais[GLUT_KEY_LEFT])  giraJogador(-JOGADOR_GIRO * dt, 0.0f);
+
+    // NPCs só andam durante a partida (o return acima os segura nas telas).
+    atualizaPerseguidor(dt);
+    atualizaGato(dt);
 
     glutPostRedisplay();
 }
@@ -119,7 +135,14 @@ static void teclaPressionada(unsigned char tecla, int, int) {
     tecla = (unsigned char) tolower(tecla);
     teclas[tecla] = true;
     if (tecla == 27) exit(0);                  // ESC
+    if (teclaTelas(tecla)) {                   // uma tela está aberta: ela decide o que fazer
+        prendeMouse(jogo.estado == JOGO_JOGANDO);   // ao começar a partida, o mouse vira câmera
+        return;
+    }
     if (tecla == 'm') prendeMouse(!mousePreso);
+    if (tecla == 'e') interageComGato();       // tecla de interação: carinho no gato
+    if (tecla == 'w' || tecla == 'a' || tecla == 's' || tecla == 'd')
+        sacodeJogador();                       // agarrado: cada aperto conta para se soltar
 }
 
 static void teclaSolta(unsigned char tecla, int, int) {
@@ -128,6 +151,7 @@ static void teclaSolta(unsigned char tecla, int, int) {
 
 static void especialPressionada(int tecla, int, int) {
     if (tecla >= 0 && tecla < 256) especiais[tecla] = true;
+    if (tecla == GLUT_KEY_UP || tecla == GLUT_KEY_DOWN) sacodeJogador();
 }
 
 static void especialSolta(int tecla, int, int) {
@@ -137,7 +161,7 @@ static void especialSolta(int tecla, int, int) {
 // O mouse é devolvido ao centro da janela a cada movimento; o deslocamento
 // em relação ao centro diz quanto a câmera deve girar.
 static void mouseMovido(int x, int y) {
-    if (!mousePreso) return;
+    if (!mousePreso || jogo.estado != JOGO_JOGANDO) return;   // nas telas o mouse fica livre
     int centroX = larguraJanela / 2, centroY = alturaJanela / 2;
     int dx = x - centroX, dy = y - centroY;
     if (dx == 0 && dy == 0) return;   // é o evento gerado pelo próprio glutWarpPointer
@@ -166,7 +190,9 @@ int main(int argc, char **argv) {
     iniciaMapa();
     iniciaJogador();
     iniciaJogo();
-    comecaPartida();   // enquanto não há tela de início, a partida começa direto
+    iniciaPerseguidor();   // depois de iniciaJogo(): escreve em jogo.perseguidor*
+    iniciaGato();
+    // A partida só começa quando o jogador confirma os comandos na tela de início (telas.cpp).
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -179,7 +205,7 @@ int main(int argc, char **argv) {
     glutMotionFunc(mouseMovido);
     glutIgnoreKeyRepeat(1);   // sem repetição automática: só importam "apertou" e "soltou"
 
-    prendeMouse(true);
+    prendeMouse(false);   // o jogo abre no menu, com o mouse livre
     tempoAnterior = glutGet(GLUT_ELAPSED_TIME);
 
     glutMainLoop();
