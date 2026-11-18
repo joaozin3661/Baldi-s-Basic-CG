@@ -6,6 +6,13 @@
 
 #define TEMPO_INICIAL 180.0f   // segundos para chegar à sala da prova (provisório; ajustar na Fase 4)
 
+// Felicidade do aluno, de 0 a FELICIDADE_MAX (barra no HUD, telas.cpp).
+// Cai a cada folha de frequência coletada (estudar cansa) e sobe a cada carinho num gato.
+#define FELICIDADE_MAX            100.0f
+#define FELICIDADE_INICIAL        100.0f
+#define FELICIDADE_POR_FREQUENCIA  30.0f   // perde ao coletar uma folha (4 folhas = 120: sem carinho, zera)
+#define FELICIDADE_POR_CARINHO     15.0f   // ganha ao acariciar um gato
+
 // Fases do jogo. A interface decide o que desenhar por aqui; a jogabilidade só anda em JOGO_JOGANDO.
 enum EstadoJogo {
     JOGO_MENU,      // tela inicial
@@ -19,8 +26,11 @@ struct Jogo {
     EstadoJogo estado;
     float tempoRestante;        // segundos; chega a zero = derrota
 
+    // "Cadernos" = folhas de frequência da faculdade (frequencia.cpp sorteia FREQ_TOTAL por partida).
     int cadernosColetados;
     int cadernosTotal;          // definido por quem posiciona os cadernos no mapa
+
+    float felicidade;           // de 0 a FELICIDADE_MAX; mude sempre por mudaFelicidade()
 
     bool perseguidorAtivo;      // falso enquanto o jogador está na entrada (spawn seguro)
     bool perseguidorPerseguindo;   // verdadeiro quando ele viu o jogador (alerta do HUD)
@@ -40,6 +50,9 @@ void mudaEstado(EstadoJogo novo);
 
 // Avança o relógio da partida; dt em segundos. Só conta em JOGO_JOGANDO.
 void atualizaJogo(float dt);
+
+// Soma delta à felicidade (negativo diminui), presa entre 0 e FELICIDADE_MAX.
+void mudaFelicidade(float delta);
 
 // Verdadeiro quando todos os cadernos foram coletados (abre a porta da sala da prova).
 bool todosCadernosColetados();

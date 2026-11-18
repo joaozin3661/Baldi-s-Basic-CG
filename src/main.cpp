@@ -2,7 +2,7 @@
 // Fase 1: labirinto 3D, câmera FPS, colisão, iluminação, texturas e visibilidade.
 //
 // Controles: W A S D ou setas = andar/girar (agarrado: apertar várias vezes para se soltar)
-//            mouse = olhar | E = acariciar o gato
+//            mouse = olhar | E = entrar/sair da sala de aula (perto da porta) ou acariciar um gato
 //            M = soltar/prender o mouse | ESC = sair
 
 #include "gl_includes.h"
@@ -13,8 +13,11 @@
 #include "perseguidor.h"
 #include "gato.h"
 #include "telas.h"
+#include "sala.h"
+#include "frequencia.h"
 #include <cctype>
 #include <cstdlib>
+#include <ctime>
 
 static int larguraJanela = 1024, alturaJanela = 600;
 
@@ -44,8 +47,9 @@ static void iniciaIluminacao() {
 
     // Atenuação: a luz enfraquece com a distância d, por 1 / (kc + kl*d + kq*d*d).
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.10f);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.04f);
+    // Divididos pela escala do mapa: com blocos maiores, a luz alcança as mesmas células de antes.
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.10f / ESCALA_MAPA);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.04f / (ESCALA_MAPA * ESCALA_MAPA));
 
     // Material único para o cenário: branco, para a textura definir a cor (GL_MODULATE).
     GLfloat matDifusa[]    = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -69,8 +73,10 @@ static void display() {
     glLightfv(GL_LIGHT0, GL_POSITION, posicaoLuz);
 
     desenhaMapa();
+    desenhaSala();
+    desenhaFrequencias();
     desenhaPerseguidor();
-    desenhaGato();
+    desenhaGatos();
     desenhaTelas(larguraJanela, alturaJanela);   // menu e telas de fim, por cima da cena
 
     glutSwapBuffers();
@@ -97,6 +103,8 @@ static void atualiza() {
     if (dt > 0.05f) dt = 0.05f;   // evita saltos grandes se o jogo travar por um instante
 
     atualizaJogo(dt);
+    atualizaSala(dt);   // escurecimento da passagem pela porta
+    atualizaFrequencias(dt);   // coleta das folhas de frequência
     if (jogo.estado != JOGO_JOGANDO) {   // nas telas de menu, prova e fim o jogador não anda
         glutPostRedisplay();
         return;
@@ -118,7 +126,7 @@ static void atualiza() {
 
     // NPCs só andam durante a partida (o return acima os segura nas telas).
     atualizaPerseguidor(dt);
-    atualizaGato(dt);
+    atualizaGatos(dt);
 
     glutPostRedisplay();
 }
@@ -140,7 +148,8 @@ static void teclaPressionada(unsigned char tecla, int, int) {
         return;
     }
     if (tecla == 'm') prendeMouse(!mousePreso);
-    if (tecla == 'e') interageComGato();       // tecla de interação: carinho no gato
+    // Tecla de interação: perto da porta da sala de aula entra/sai; senão, carinho no gato.
+    if (tecla == 'e' && !interagePortaSala()) interageComGato();
     if (tecla == 'w' || tecla == 'a' || tecla == 's' || tecla == 'd')
         sacodeJogador();                       // agarrado: cada aperto conta para se soltar
 }
@@ -188,10 +197,15 @@ int main(int argc, char **argv) {
     iniciaIluminacao();
     iniciaTexturas();
     iniciaMapa();
+    iniciaSala();          // depois do mapa: procura a porta 'P' e as células 'F'
+    iniciaFrequencias();
+    // As texturas usam semente fixa (srand(7)); daqui em diante, o sorteio muda a cada execução
+    // (posição das folhas de frequência, passeio do gato e do perseguidor).
+    srand((unsigned) time(NULL));
     iniciaJogador();
     iniciaJogo();
     iniciaPerseguidor();   // depois de iniciaJogo(): escreve em jogo.perseguidor*
-    iniciaGato();
+    iniciaGatos();
     // A partida só começa quando o jogador confirma os comandos na tela de início (telas.cpp).
 
     glutDisplayFunc(display);

@@ -45,17 +45,19 @@ bool sorteiaVizinho(int linha, int coluna, int lEvita, int cEvita, int *lProx, i
     return true;
 }
 
-// BFS clássica: uma fila de células, um vetor "visitado" e um vetor "pai" para
-// reconstruir o caminho. Como a grade é pequena (19 x 20), cabe tudo em arrays estáticos.
-bool proximoPasso(int lDe, int cDe, int lPara, int cPara, int *lProx, int *cProx) {
-    static int fila[TOTAL_CELULAS];
-    static int pai[TOTAL_CELULAS];
-    static bool visitado[TOTAL_CELULAS];
+// BFS clássica: uma fila de células, um vetor "visitado", um vetor "pai" para
+// reconstruir o caminho e a distância (em passos) de cada célula até a origem.
+// Como a grade é pequena (19 x 20), cabe tudo em arrays estáticos.
+static int fila[TOTAL_CELULAS];
+static int pai[TOTAL_CELULAS];
+static int passosAte[TOTAL_CELULAS];
+static bool visitado[TOTAL_CELULAS];
 
-    if (lDe == lPara && cDe == cPara) return false;
+// Roda a BFS de (lDe, cDe) até alcançar (lPara, cPara). Retorna falso se não há caminho.
+static bool buscaEmLargura(int lDe, int cDe, int lPara, int cPara) {
     if (celulaSolida(lDe, cDe) || celulaSolida(lPara, cPara)) return false;
 
-    for (int i = 0; i < TOTAL_CELULAS; i++) { visitado[i] = false; pai[i] = -1; }
+    for (int i = 0; i < TOTAL_CELULAS; i++) { visitado[i] = false; pai[i] = -1; passosAte[i] = -1; }
 
     int origem = lDe * MAPA_COLUNAS + cDe;
     int destino = lPara * MAPA_COLUNAS + cPara;
@@ -63,6 +65,7 @@ bool proximoPasso(int lDe, int cDe, int lPara, int cPara, int *lProx, int *cProx
 
     fila[fim++] = origem;
     visitado[origem] = true;
+    passosAte[origem] = 0;
 
     while (inicio < fim) {
         int atual = fila[inicio++];
@@ -76,11 +79,24 @@ bool proximoPasso(int lDe, int cDe, int lPara, int cPara, int *lProx, int *cProx
             if (visitado[vizinho]) continue;
             visitado[vizinho] = true;
             pai[vizinho] = atual;
+            passosAte[vizinho] = passosAte[atual] + 1;
             fila[fim++] = vizinho;
         }
     }
+    return visitado[destino];
+}
 
-    if (!visitado[destino]) return false;   // sem caminho
+int distanciaNaGrade(int lDe, int cDe, int lPara, int cPara) {
+    if (!buscaEmLargura(lDe, cDe, lPara, cPara)) return -1;
+    return passosAte[lPara * MAPA_COLUNAS + cPara];
+}
+
+bool proximoPasso(int lDe, int cDe, int lPara, int cPara, int *lProx, int *cProx) {
+    if (lDe == lPara && cDe == cPara) return false;
+    if (!buscaEmLargura(lDe, cDe, lPara, cPara)) return false;   // sem caminho
+
+    int origem = lDe * MAPA_COLUNAS + cDe;
+    int destino = lPara * MAPA_COLUNAS + cPara;
 
     // Volta do destino até achar a célula cujo pai é a origem: é o primeiro passo.
     int passo = destino;

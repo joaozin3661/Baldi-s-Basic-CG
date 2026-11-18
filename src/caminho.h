@@ -21,6 +21,10 @@ bool sorteiaVizinho(int linha, int coluna, int lEvita, int cEvita, int *lProx, i
 // Retorna falso se já está no destino ou se não há caminho.
 bool proximoPasso(int lDe, int cDe, int lPara, int cPara, int *lProx, int *cProx);
 
+// Número de passos (células) do caminho mais curto de (lDe, cDe) até (lPara, cPara),
+// pela mesma BFS. 0 se é a mesma célula; -1 se não há caminho.
+int distanciaNaGrade(int lDe, int cDe, int lPara, int cPara);
+
 // Verdadeiro se o segmento de (x0, z0) a (x1, z1) não cruza nenhuma célula sólida.
 // Anda ao longo do segmento em passos menores que uma célula, testando cada célula.
 bool haLinhaDeVisao(float x0, float z0, float x1, float z1);

@@ -34,7 +34,15 @@ estado do jogo (menu, jogando, prova, vitória, derrota) e a posição do perseg
 - [x] (Os dois) `jogo.h` com o estado compartilhado
   Feito em 16/11/2026 (Raimundo). Arquivos: `src/jogo.h`, `src/jogo.cpp`. O `main.cpp` chama `iniciaJogo()`, `comecaPartida()` e `atualizaJogo(dt)`,
   e só move o jogador em `JOGO_JOGANDO`. Enquanto não há telas, a partida começa direto. Compila sem avisos com `-Wall`.
-- [ ] (João) Cadernos: posicionamento no mapa, desenho e coleta (colisão por esferas)
+- [x] (Raimundo, área do João) Cadernos: posicionamento no mapa, desenho e coleta (colisão por esferas)
+  Feito em 18/11/2026 (Raimundo, com o Claude) como as 4 folhas de **frequência da faculdade**. Arquivos: `src/frequencia.h/.cpp`
+  (`sorteiaFrequencias()` chamada por `comecaPartida()`: a cada partida sorteia 4 células de corredor longe da entrada e afastadas
+  entre si; cada folha cai no chão, deitada e girada, ou fica presa numa parede de tijolo/armário; coleta automática a 0,9 unidade;
+  brilho próprio pulsante via `GL_EMISSION`), `src/texturas.cpp` (`TEX_FREQUENCIA`), `src/telas.cpp` (indicador "Frequencia: n/4" e
+  "4/4 - sala liberada!", aviso ao coletar), `src/main.cpp` (`srand(time)` depois das texturas). O progresso usa
+  `jogo.cadernosColetados/cadernosTotal`, então a tranca da sala e a velocidade do perseguidor já reagem. Testado: compila sem avisos;
+  teste fora do repositório mostrou posições diferentes em 3 partidas, coleta 1/4 a 4/4 sem pontos de coleta dentro de parede,
+  porta trancada antes e liberada depois, e capturas das folhas no chão e na parede e do indicador. Não testado jogando.
 - [x] (Raimundo, área do João) Perseguidor: máquina de estados (patrulha e perseguição) e busca de caminho na grade
   Feito em 16/11/2026 (Raimundo, com o Claude). Arquivos: `src/perseguidor.h/.cpp` (estados `VAGANDO`, `PERSEGUINDO`, `ARRASTANDO`,
   `RECUPERANDO`; percepção por raio + linha de visão; contato esfera x esfera agarra o jogador e o arrasta por BFS até `S`, o jogador
@@ -49,6 +57,17 @@ estado do jogo (menu, jogando, prova, vitória, derrota) e a posição do perseg
 - [x] (Raimundo) Gato da faculdade: vaga, senta e aceita carinho com `E`
   Feito em 16/11/2026. Arquivos: `src/gato.h/.cpp` (estados `VAGANDO`, `PARADO`, `ACARICIADO`; `interageComGato()` chamada pelo `main.cpp`
   na tecla `E`), símbolo `G` em `mapa.h/.cpp`. Mesmo teste do perseguidor.
+- [x] (Raimundo, com o Claude) Gato guia e barra de felicidade
+  Feito em 18/11/2026. Arquivos: `src/gato.h/.cpp` (agora `gatos[2]`: o laranja e o guia cinza de coleira; estados novos
+  `CORRENDO` e `INDO`; teste de campo de visão do aluno; `iniciaGatos/atualizaGatos/desenhaGatos`), `src/caminho.h/.cpp`
+  (`distanciaNaGrade()`, a BFS foi separada em `buscaEmLargura()`), `src/frequencia.h/.cpp` (`quantidadeFrequencias()`,
+  `celulaFrequenciaPendente()`; coleta tira felicidade), `src/jogo.h/.cpp` (`jogo.felicidade`, `mudaFelicidade()`; folha tira 30, carinho dá 15),
+  `src/telas.cpp` (barra de felicidade no HUD), `src/mapa.h/.cpp` (símbolo `C` em (5, 4)), `src/main.cpp` (chamadas renomeadas).
+  Testado: compila sem avisos com `-Wall`, `timeout 4` mostra os três NPCs nascendo; teste de console fora do repositório
+  conferiu a felicidade (inicial, coleta, carinho, limites, recomeço), o gato laranja e 6 corridas do guia com sementes
+  diferentes (folha mais próxima pela BFS, 7,0/s do carinho até a folha, mesmo fora de vista, chegada na célula certa), aluno de costas,
+  `E` ignorado na corrida, folha pega antes pelo aluno, nenhuma folha pendente e 30 s sem entrar em parede.
+  **Não testado jogando:** a barra no HUD e o desenho do guia não foram vistos na janela.
 - [ ] (João) Perseguidor: spawn seguro na entrada (`jogo.perseguidorAtivo`) e ajuste de alcance/velocidade
 - [ ] (Dupla) HUD 2D sobre a cena: temporizador, contador de cadernos, alerta de proximidade
 - [~] (Raimundo) Telas de início, game over e vitória (estados do jogo)
@@ -59,7 +78,12 @@ estado do jogo (menu, jogando, prova, vitória, derrota) e a posição do perseg
 
 ## Fase 3 — Conteúdo
 
-- [ ] (João) Porta da sala abre ao coletar todos os cadernos
+- [x] (João) Porta da sala abre ao coletar todos os cadernos (as 4 folhas de frequência, ver Fase 2)
+  18/11/2026 (Raimundo, com o Claude): `src/sala.h/.cpp` faz a sala de aula atrás da `P` (quadro, mesa do professor,
+  8 carteiras, colisão com os móveis) e a passagem com `E` (entra e sai, escurecimento, dica na tela). A tranca já
+  consulta `todosCadernosColetados()`; com as folhas de frequência, fica trancada até 4/4.
+  Testado: compila sem avisos, `timeout 4` carrega ("Sala de aula: porta em (14, 17), 9 moveis") e capturas fora do
+  repositório mostram a sala, o quadro e a placa da porta. A passagem com `E` não foi testada jogando.
 - [ ] (João) Boss fight com o Professor (mecânica a decidir pelos dois)
 - [ ] (Dupla) Minimapa 2D com a posição do jogador
 - [ ] (Dupla) Áudio: passos, coleta, alerta do perseguidor, música
@@ -70,6 +94,25 @@ estado do jogo (menu, jogando, prova, vitória, derrota) e a posição do perseg
 - [ ] (João) Ajuste de dificuldade: tempo, número de cadernos, velocidades
 - [ ] (Quem tiver tempo) Itens auxiliares, se entrarem
 - [ ] (Quem tiver tempo) Trocar texturas procedurais por imagens
+- [x] (Raimundo, com o Claude) Enfeitar o cenário: armários de escola e portas de sala (não abrem) com placa do nome
+  Feito em 18/11/2026. Arquivos: `src/mapa.h` (`CEL_ARMARIO 'A'`, `CEL_SALA_DECOR_PRIMEIRA/ULTIMA` = letras minúsculas),
+  `src/mapa.cpp` (matriz com 18 armários e 12 portas de sala em células que já eram parede; tabela `salasDecorativas` com nome e face;
+  `desenhaBloco` refeito por faces, `desenhaPlaca` com `glutStrokeCharacter` na display list; `celulaSolida()` trata os símbolos novos
+  como parede), `src/texturas.h/.cpp` (`TEX_ARMARIO`, `TEX_PORTA_SALA`; tijolo virou `pintaTijolo()` para emendar com a parede),
+  `.claude/agents/cartografo.md` (verificador aceita `A` e minúsculas). As células andáveis são as mesmas de antes (mesma
+  alcançabilidade, 2 becos). Testado: verificador ok, compila sem avisos com `-Wall`, `timeout 4` sem "Erro no mapa"; capturas
+  fora do repositório (programa de teste com `mapa.cpp` e `texturas.cpp`) mostraram portas, placas legíveis e armários.
+  Nenhum outro módulo precisou mudar: NPCs, BFS e colisão usam `celulaSolida()`. O minimapa, quando for feito, deve pintar
+  como parede tudo o que `celulaSolida()` diz ser sólido, não só `#`.
+- [x] (Raimundo, com o Claude) Alargar o mapa: uma coluna a mais de cada lado (20 -> 22), corredores laterais com 2 células
+  Feito em 18/11/2026. Arquivos: `src/mapa.h` (`MAPA_COLUNAS 22`), `src/mapa.cpp` (matriz e comentários de posição da tabela
+  `salasDecorativas`). Testado: verificador ok (sem isoladas, 1 beco), compila sem avisos, `timeout` carrega com a porta da sala
+  em (14, 18); capturas fora do repositório dos dois corredores largos e da porta `l` na nova borda.
+- [x] (Raimundo, com o Claude) Corredores mais largos: `TAM_CELULA` 2,0 -> 3,0, com `ESCALA_MAPA` ajustando velocidades e luz
+  Feito em 18/11/2026. Arquivos: `src/mapa.h` (`TAM_CELULA`, `ESCALA_MAPA`), `src/jogador.h`, `src/perseguidor.h`, `src/gato.h`
+  (velocidades e alcances x `ESCALA_MAPA`), `src/main.cpp` (atenuação da luz), `src/sala.cpp` (quadro, espaçamento das carteiras,
+  `MAX_MOVEIS` 40), `src/frequencia.cpp` (desvio da folha na célula). Testado: compila sem avisos, `timeout` carrega (sala com
+  12 móveis); capturas fora do repositório da entrada, do corredor lateral e da sala. Aprovado jogando pelo Raimundo.
 
 ## Relatório e entrega
 

@@ -41,6 +41,7 @@ Windows com MSYS2 e freeGLUT: troque `-lglut32` por `-lfreeglut`.
 - `W` `A` `S` `D` ou setas: andar e girar
 - Agarrado pelo perseguidor: apertar as teclas de andar várias vezes, rápido, para se soltar
 - Mouse: olhar
-- `E`: fazer carinho no gato (perto dele)
+- `E`: fazer carinho num gato (perto dele); cada carinho deixa o aluno mais feliz.
+  O gato cinza de coleira azul, depois do carinho, sai correndo até a folha de frequência mais próxima: siga-o
 - `M`: soltar ou prender o mouse
 - `ESC`: sair
