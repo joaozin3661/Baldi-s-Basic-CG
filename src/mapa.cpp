@@ -13,26 +13,30 @@
 // Enfeites (sólidos como parede): A = armários; a, b, c... = porta de sala que não abre, com placa
 // (o nome de cada letra está na tabela salasDecorativas, logo abaixo).
 static const char *mapa[MAPA_LINHAS] = {
-    "########a#####AAAA##",
-    "#S...#.....#.......#",
-    "#.k#.#.###.#.##b##.A",
-    "#.#..#...#...#...#.A",
-    "#.#.####.##c##.#.#.A",
-    "#.#.C....#.....#...#",
-    "#.AA#d##.#.##e####.#",
-    "#......#.#.#.....#.j",
-    "####.#.#...#.###.#.#",
-    "l....#.##f##.#...#.#",
-    "#.####.......#.###.#",
-    "#.#.G..#AAA#.#.....#",
-    "#.#.####...#.#AAgA.#",
-    "#...#....#.#...X...#",
-    "#.###.####.######P##",
-    "#.....#....#FFFFFFF#",
-    "###h#.#.####FFFFFFF#",
-    "#..........#FFFFFFF#",
-    "####AAA##i##########"
+    "#########a#####AAAA###",
+    "#.S...#.....#........#",
+    "#..k#.#.###.#.##b##..A",
+    "#..#..#...#...#...#..A",
+    "#..#.####.##c##.#.#..A",
+    "#..#.C....#.....#....#",
+    "#..AA#d##.#.##e####..#",
+    "#.......#.#.#.....#..j",
+    "#.###.#.#...#.###.#..#",
+    "l.....#.##f##.#...#..#",
+    "#..####.......#.###..#",
+    "#..#.G..#AAA#.#......#",
+    "#..#.####...#.#AAgA..#",
+    "#....#....#.#...X....#",
+    "#..###.####.######P###",
+    "#......#....#FFFFFFF##",
+    "#.##h#.#.####FFFFFFF##",
+    "#...........#FFFFFFF##",
+    "#####AAA##i###########"
 };
+// Em 18/11/2026 o mapa ganhou uma coluna de cada lado (20 -> 22). A antiga borda virou
+// corredor, deixando os corredores das laterais com 2 células de largura; os enfeites que
+// estavam nela (l, j e os armários da direita) foram para a nova borda. Ao lado da sala da
+// prova a antiga borda continua parede.
 
 // Direções das faces de uma célula, na ordem em que desenhaBloco() as percorre.
 enum { FACE_NORTE, FACE_SUL, FACE_OESTE, FACE_LESTE, QUANT_FACES };
@@ -50,17 +54,17 @@ struct SalaDecorativa {
 };
 
 static const SalaDecorativa salasDecorativas[] = {
-    { "COMPUTACAO",   "GRAFICA",      FACE_SUL   },   // a  (0, 8)
-    { "ALGORITMOS",   "",             FACE_NORTE },   // b  (2, 15)
-    { "ESTRUTURA",    "DE DADOS",     FACE_SUL   },   // c  (4, 11)
-    { "CALCULO",      "",             FACE_NORTE },   // d  (6, 5)
-    { "BANCO",        "DE DADOS",     FACE_SUL   },   // e  (6, 13)
-    { "REDES DE",     "COMPUTADORES", FACE_SUL   },   // f  (9, 9)
-    { "SISTEMAS",     "OPERACIONAIS", FACE_NORTE },   // g  (12, 16)
-    { "COMPILADORES", "",             FACE_SUL   },   // h  (16, 3)
-    { "INTELIGENCIA", "ARTIFICIAL",   FACE_NORTE },   // i  (18, 9)
-    { "ENGENHARIA",   "DE SOFTWARE",  FACE_OESTE },   // j  (7, 19)
-    { "COORDENACAO",  "DO CURSO",     FACE_NORTE },   // k  (2, 2), ao lado da entrada
+    { "COMPUTACAO",   "GRAFICA",      FACE_SUL   },   // a  (0, 9)
+    { "ALGORITMOS",   "",             FACE_NORTE },   // b  (2, 16)
+    { "ESTRUTURA",    "DE DADOS",     FACE_SUL   },   // c  (4, 12)
+    { "CALCULO",      "",             FACE_NORTE },   // d  (6, 6)
+    { "BANCO",        "DE DADOS",     FACE_SUL   },   // e  (6, 14)
+    { "REDES DE",     "COMPUTADORES", FACE_SUL   },   // f  (9, 10)
+    { "SISTEMAS",     "OPERACIONAIS", FACE_NORTE },   // g  (12, 17)
+    { "COMPILADORES", "",             FACE_SUL   },   // h  (16, 4)
+    { "INTELIGENCIA", "ARTIFICIAL",   FACE_NORTE },   // i  (18, 10)
+    { "ENGENHARIA",   "DE SOFTWARE",  FACE_OESTE },   // j  (7, 21)
+    { "COORDENACAO",  "DO CURSO",     FACE_NORTE },   // k  (2, 3), ao lado da entrada
     { "MATEMATICA",   "DISCRETA",     FACE_LESTE }    // l  (9, 0)
 };
 #define QUANT_SALAS_DECOR ((int) (sizeof(salasDecorativas) / sizeof(salasDecorativas[0])))

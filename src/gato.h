@@ -8,17 +8,19 @@
 #ifndef GATO_H
 #define GATO_H
 
+#include "mapa.h"   // ESCALA_MAPA
+
 #define NUM_GATOS 2
 
 #define GATO_RAIO            0.30f   // raio da esfera envolvente
-#define GATO_VELOCIDADE      1.20f   // unidades do mundo por segundo (anda devagar)
+#define GATO_VELOCIDADE      (1.20f * ESCALA_MAPA)   // unidades do mundo por segundo (anda devagar)
 #define GATO_ALCANCE_CARINHO 1.20f   // distância máxima do jogador para acariciar
 #define GATO_TEMPO_CARINHO   3.00f   // segundos que o gato comum fica parado recebendo carinho
 #define GATO_CHANCE_PARAR    0.20f   // chance de sentar ao chegar numa célula (0 a 1)
 
 // Gato guia
 #define GATO_GUIA_TEMPO_CARINHO 0.60f   // ronrona um instante antes de disparar
-#define GATO_GUIA_VEL_CORRIDA   7.00f   // o dobro do aluno (3,5), do carinho até a folha
+#define GATO_GUIA_VEL_CORRIDA   (7.00f * ESCALA_MAPA)   // o dobro do aluno, do carinho até a folha
 
 // Campo de visão do aluno, para saber se ele ainda vê o gato guia correndo.
 // A câmera usa gluPerspective(65, 1024/600): meio ângulo horizontal = atan(tan(32,5°) * 1,7) ≈ 47°.

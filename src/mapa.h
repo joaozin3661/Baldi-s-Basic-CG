@@ -3,9 +3,12 @@
 #define MAPA_H
 
 #define MAPA_LINHAS   19
-#define MAPA_COLUNAS  20
+#define MAPA_COLUNAS  22
 
-#define TAM_CELULA    2.0f   // lado de cada célula, em unidades do mundo
+#define TAM_CELULA    3.0f   // lado de cada célula, em unidades do mundo (era 2,0 até 18/11/2026)
+// Quanto o bloco cresceu em relação ao tamanho original (2,0). Velocidades e alcances medidos
+// em unidades do mundo são multiplicados por isto, para o jogo manter o ritmo em "células por segundo".
+#define ESCALA_MAPA   (TAM_CELULA / 2.0f)
 #define ALTURA_PAREDE 2.5f
 
 // Símbolos do mapa

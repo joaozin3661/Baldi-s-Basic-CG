@@ -124,7 +124,7 @@ static void posicionaFolha(Folha *f, int l, int c) {
 
     float cx, cz;
     centroDaCelula(l, c, &cx, &cz);
-    float desvio = (sorteio01() - 0.5f) * 0.8f;   // de -0,4 a 0,4 ao longo da parede
+    float desvio = (sorteio01() - 0.5f) * 0.8f * ESCALA_MAPA;   // até 0,4 x ESCALA_MAPA ao longo da parede
     f->coletada = false;
     f->linha = l;
     f->coluna = c;
@@ -142,7 +142,7 @@ static void posicionaFolha(Folha *f, int l, int c) {
         f->angulo = sorteio01() * 360.0f;
         f->y = FREQ_AFASTA;
         f->x = cx + desvio;
-        f->z = cz + (sorteio01() - 0.5f) * 0.8f;
+        f->z = cz + (sorteio01() - 0.5f) * 0.8f * ESCALA_MAPA;
     }
 }
 

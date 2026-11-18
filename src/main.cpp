@@ -47,8 +47,9 @@ static void iniciaIluminacao() {
 
     // Atenuação: a luz enfraquece com a distância d, por 1 / (kc + kl*d + kq*d*d).
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.10f);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.04f);
+    // Divididos pela escala do mapa: com blocos maiores, a luz alcança as mesmas células de antes.
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.10f / ESCALA_MAPA);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.04f / (ESCALA_MAPA * ESCALA_MAPA));
 
     // Material único para o cenário: branco, para a textura definir a cor (GL_MODULATE).
     GLfloat matDifusa[]    = { 1.0f, 1.0f, 1.0f, 1.0f };

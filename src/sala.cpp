@@ -17,7 +17,7 @@
 #define SALA_TEMPO_PASSAGEM 0.6f   // segundos de escurecimento depois de passar pela porta
 #define OLHA_PARA_OESTE    -1.5708f   // yaw de quem olha para -x (o quadro)
 
-#define MAX_MOVEIS 16
+#define MAX_MOVEIS 40
 
 // Caixa de colisão de um móvel, vista de cima (só x e z: o jogador não pula).
 struct Caixa2D { float x0, z0, x1, z1; };
@@ -158,7 +158,7 @@ static void cuboDeGiz(float x, float y, float lado) {
 // A matriz leva para o canto esquerdo do quadro (visto de dentro da sala) e gira 90 graus
 // em torno de y: no sistema local, x corre ao longo da parede, y sobe e z sai da parede.
 static void desenhaQuadro(float zCentro) {
-    const float LARGURA = 4.0f, Y0 = 0.85f, Y1 = 2.05f, MOLDURA = 0.06f;
+    const float LARGURA = 4.0f * ESCALA_MAPA, Y0 = 0.85f, Y1 = 2.05f, MOLDURA = 0.06f;
     float l = LARGURA / 2;
     if (l > (salaZ1 - salaZ0) / 2 - 0.4f) l = (salaZ1 - salaZ0) / 2 - 0.4f;   // sala estreita
     float largura = 2 * l;
@@ -376,14 +376,14 @@ void iniciaSala() {
     desenhaQuadro(zc);
     desenhaMesaProfessor(zc);
 
-    // Fileiras de carteiras viradas para o quadro: colunas a cada 2,5 unidades a partir da mesa
+    // Fileiras de carteiras viradas para o quadro: colunas a cada 2,5 x ESCALA_MAPA a partir da mesa
     // do professor, até 1,6 unidade da parede do fundo; até três carteiras por coluna.
     float profundidade = salaZ1 - salaZ0;
-    int porColuna = profundidade >= 5.5f ? 3 : (profundidade >= 3.5f ? 2 : 1);
+    int porColuna = profundidade >= 5.5f * ESCALA_MAPA ? 3 : (profundidade >= 3.5f * ESCALA_MAPA ? 2 : 1);
     int n = 0;
-    for (float dx = salaX0 + 4.5f; dx + 0.75f <= salaX1 - 1.6f; dx += 2.5f) {
+    for (float dx = salaX0 + 4.5f; dx + 0.75f <= salaX1 - 1.6f; dx += 2.5f * ESCALA_MAPA) {
         for (int i = 0; i < porColuna; i++) {
-            float dz = zc + (i - (porColuna - 1) / 2.0f) * 1.9f;
+            float dz = zc + (i - (porColuna - 1) / 2.0f) * 1.9f * ESCALA_MAPA;
             // Deixa livre o lugar onde o jogador aparece e o primeiro passo dele para o quadro.
             if (pertoDaCaixa(xEntra, zEntra, dx - 0.27f, dz - 0.37f, dx + 0.75f, dz + 0.37f, 1.0f))
                 continue;

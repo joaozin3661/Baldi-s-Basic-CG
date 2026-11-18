@@ -104,6 +104,15 @@ estado do jogo (menu, jogando, prova, vitória, derrota) e a posição do perseg
   fora do repositório (programa de teste com `mapa.cpp` e `texturas.cpp`) mostraram portas, placas legíveis e armários.
   Nenhum outro módulo precisou mudar: NPCs, BFS e colisão usam `celulaSolida()`. O minimapa, quando for feito, deve pintar
   como parede tudo o que `celulaSolida()` diz ser sólido, não só `#`.
+- [x] (Raimundo, com o Claude) Alargar o mapa: uma coluna a mais de cada lado (20 -> 22), corredores laterais com 2 células
+  Feito em 18/11/2026. Arquivos: `src/mapa.h` (`MAPA_COLUNAS 22`), `src/mapa.cpp` (matriz e comentários de posição da tabela
+  `salasDecorativas`). Testado: verificador ok (sem isoladas, 1 beco), compila sem avisos, `timeout` carrega com a porta da sala
+  em (14, 18); capturas fora do repositório dos dois corredores largos e da porta `l` na nova borda.
+- [x] (Raimundo, com o Claude) Corredores mais largos: `TAM_CELULA` 2,0 -> 3,0, com `ESCALA_MAPA` ajustando velocidades e luz
+  Feito em 18/11/2026. Arquivos: `src/mapa.h` (`TAM_CELULA`, `ESCALA_MAPA`), `src/jogador.h`, `src/perseguidor.h`, `src/gato.h`
+  (velocidades e alcances x `ESCALA_MAPA`), `src/main.cpp` (atenuação da luz), `src/sala.cpp` (quadro, espaçamento das carteiras,
+  `MAX_MOVEIS` 40), `src/frequencia.cpp` (desvio da folha na célula). Testado: compila sem avisos, `timeout` carrega (sala com
+  12 móveis); capturas fora do repositório da entrada, do corredor lateral e da sala. Aprovado jogando pelo Raimundo.
 
 ## Relatório e entrega
 
