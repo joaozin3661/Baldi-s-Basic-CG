@@ -1,5 +1,6 @@
 #include "jogo.h"
 #include "jogador.h"
+#include "frequencia.h"
 #include <cmath>
 #include <cstdio>
 
@@ -21,6 +22,7 @@ void iniciaJogo() {
     jogo.tempoRestante = TEMPO_INICIAL;
     jogo.cadernosColetados = 0;
     jogo.cadernosTotal = 0;
+    jogo.felicidade = FELICIDADE_INICIAL;
     jogo.perseguidorAtivo = false;
     jogo.perseguidorPerseguindo = false;
     jogo.perseguidorX = jogo.perseguidorZ = 0.0f;
@@ -28,9 +30,10 @@ void iniciaJogo() {
 
 void comecaPartida() {
     jogo.tempoRestante = TEMPO_INICIAL;
-    jogo.cadernosColetados = 0;
+    jogo.felicidade = FELICIDADE_INICIAL;
     jogo.perseguidorAtivo = false;
     jogo.perseguidorPerseguindo = false;
+    sorteiaFrequencias();   // novas folhas de frequência a cada partida (zera cadernosColetados)
     mudaEstado(JOGO_JOGANDO);
 }
 
@@ -48,6 +51,14 @@ void atualizaJogo(float dt) {
         jogo.tempoRestante = 0.0f;
         mudaEstado(JOGO_DERROTA);   // o tempo acabou antes de chegar à prova
     }
+}
+
+void mudaFelicidade(float delta) {
+    float antes = jogo.felicidade;
+    jogo.felicidade += delta;
+    if (jogo.felicidade < 0.0f) jogo.felicidade = 0.0f;
+    if (jogo.felicidade > FELICIDADE_MAX) jogo.felicidade = FELICIDADE_MAX;
+    printf("Felicidade: %.0f -> %.0f\n", antes, jogo.felicidade);
 }
 
 bool todosCadernosColetados() {
