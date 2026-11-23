@@ -47,11 +47,12 @@ contagem de símbolos, alcançabilidade por busca em largura a partir de `S` e c
       for my $l (0..$L-1) { print "ERRO: linha $l tem ", length $m[$l], " colunas\n" if length $m[$l] != $C }
       my %cnt; for my $l (0..$L-1) { for my $c (0..$C-1) { $cnt{substr($m[$l],$c,1)}++ } }
       print "simbolos: ", join(" ", map {"$_=$cnt{$_}"} sort keys %cnt), "\n";
+      my $parede = sub { $_[0] =~ /^[#Aa-z]$/ };   # parede, armario e portas de sala (minusculas)
       for my $l (0..$L-1) { for my $c (0..$C-1) { my $ch = substr($m[$l],$c,1);
-        print "ERRO: borda aberta em ($l,$c)\n" if ($l==0||$l==$L-1||$c==0||$c==$C-1) && $ch ne "#" } }
+        print "ERRO: borda aberta em ($l,$c)\n" if ($l==0||$l==$L-1||$c==0||$c==$C-1) && !$parede->($ch) } }
       my ($sl,$sc); for my $l (0..$L-1) { my $i = index $m[$l], "S"; if ($i>=0) { ($sl,$sc)=($l,$i) } }
       die "ERRO: sem S\n" unless defined $sl;
-      my %v; my @q = ([$sl,$sc]); $v{"$sl,$sc"}=1; my $solid = sub { my ($l,$c)=@_; return 1 if $l<0||$l>=$L||$c<0||$c>=$C; my $ch=substr($m[$l],$c,1); $ch eq "#" || $ch eq "P" };
+      my %v; my @q = ([$sl,$sc]); $v{"$sl,$sc"}=1; my $solid = sub { my ($l,$c)=@_; return 1 if $l<0||$l>=$L||$c<0||$c>=$C; my $ch=substr($m[$l],$c,1); $parede->($ch) || $ch eq "P" };
       while (@q) { my ($l,$c) = @{shift @q}; for my $d ([1,0],[-1,0],[0,1],[0,-1]) { my ($nl,$nc)=($l+$d->[0],$c+$d->[1]); next if $solid->($nl,$nc) || $v{"$nl,$nc"}++; push @q, [$nl,$nc] } }
       my ($iso,$becos)=(0,0);
       for my $l (0..$L-1) { for my $c (0..$C-1) { next if $solid->($l,$c); my $ch=substr($m[$l],$c,1);
@@ -60,6 +61,8 @@ contagem de símbolos, alcançabilidade por busca em largura a partir de `S` e c
       print "isoladas=$iso becos=$becos\n"; print $iso ? "MAPA INVALIDO\n" : "mapa ok\n";
     '
 
+O verificador trata como sólidos `#`, `P`, `A` (armário) e as letras minúsculas (portas de sala de
+cenário); se criar outro símbolo de parede, acrescente-o em `$parede` e em `celulaSolida()`.
 Se o verificador apontar erro, corrija antes de compilar. Depois compile:
 `g++ -Wall -o labirinto.exe src/*.cpp -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32` (Linux:
 `-lGL -lGLU -lglut`) e rode `timeout 4 ./labirinto.exe` para ver se o mapa carrega sem a mensagem

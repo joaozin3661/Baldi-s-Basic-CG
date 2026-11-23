@@ -1,5 +1,6 @@
 #include "jogador.h"
 #include "mapa.h"
+#include "sala.h"
 #include "gl_includes.h"
 #include <cmath>
 
@@ -29,8 +30,11 @@ void moveJogador(float frente, float lado, float dt) {
 
     // Testa cada eixo separadamente: se um está bloqueado, o outro ainda anda,
     // e o jogador desliza ao longo da parede em vez de travar.
-    if (!colideComMapa(jogador.x + dx, jogador.z, JOGADOR_RAIO)) jogador.x += dx;
-    if (!colideComMapa(jogador.x, jogador.z + dz, JOGADOR_RAIO)) jogador.z += dz;
+    // Os móveis da sala de aula também bloqueiam (colideComSala).
+    if (!colideComMapa(jogador.x + dx, jogador.z, JOGADOR_RAIO)
+        && !colideComSala(jogador.x + dx, jogador.z, JOGADOR_RAIO)) jogador.x += dx;
+    if (!colideComMapa(jogador.x, jogador.z + dz, JOGADOR_RAIO)
+        && !colideComSala(jogador.x, jogador.z + dz, JOGADOR_RAIO)) jogador.z += dz;
 }
 
 void giraJogador(float deltaYaw, float deltaPitch) {

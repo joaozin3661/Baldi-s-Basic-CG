@@ -4,12 +4,14 @@
 #ifndef PERSEGUIDOR_H
 #define PERSEGUIDOR_H
 
+#include "mapa.h"   // ESCALA_MAPA
+
 #define PERSEGUIDOR_RAIO            0.40f   // raio da esfera envolvente (colisão com o jogador)
-#define PERSEGUIDOR_VEL_BASE        2.00f   // unidades do mundo por segundo, sem cadernos
-#define PERSEGUIDOR_VEL_POR_CADERNO 0.35f   // acréscimo por caderno coletado
-#define PERSEGUIDOR_VEL_ARRASTO     1.40f   // velocidade ao arrastar o aluno (carregar pesa)
-#define PERSEGUIDOR_ALCANCE_VE      7.00f   // distância em que passa a perseguir (se houver linha de visão)
-#define PERSEGUIDOR_ALCANCE_PERDE  11.00f   // distância em que desiste e volta a vagar
+#define PERSEGUIDOR_VEL_BASE        (2.00f * ESCALA_MAPA)   // unidades do mundo por segundo, sem cadernos
+#define PERSEGUIDOR_VEL_POR_CADERNO (0.35f * ESCALA_MAPA)   // acréscimo por caderno coletado
+#define PERSEGUIDOR_VEL_ARRASTO     (1.40f * ESCALA_MAPA)   // velocidade ao arrastar o aluno (carregar pesa)
+#define PERSEGUIDOR_ALCANCE_VE      (7.00f * ESCALA_MAPA)   // distância em que passa a perseguir (se houver linha de visão)
+#define PERSEGUIDOR_ALCANCE_PERDE  (11.00f * ESCALA_MAPA)   // distância em que desiste e volta a vagar
 #define PERSEGUIDOR_RECUPERACAO     3.00f   // segundos parado depois de soltar o jogador
 #define PERSEGUIDOR_TREGUA          5.00f   // segundos em que ignora o jogador depois de soltá-lo
 #define PERSEGUIDOR_SACUDIDAS       6.00f   // "força" acumulada para se soltar (1 por tecla apertada)

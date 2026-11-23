@@ -2,9 +2,11 @@
 #ifndef JOGADOR_H
 #define JOGADOR_H
 
+#include "mapa.h"   // ESCALA_MAPA
+
 #define JOGADOR_RAIO       0.30f   // raio do círculo de colisão
 #define JOGADOR_ALTURA     1.50f   // altura dos olhos
-#define JOGADOR_VELOCIDADE 3.50f   // unidades do mundo por segundo
+#define JOGADOR_VELOCIDADE (3.50f * ESCALA_MAPA)   // unidades do mundo por segundo
 #define JOGADOR_GIRO       2.20f   // radianos por segundo (setas esquerda/direita)
 
 struct Jogador {
